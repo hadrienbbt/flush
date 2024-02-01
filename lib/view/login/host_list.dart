@@ -42,21 +42,21 @@ class _HostListState extends State<HostList> {
       return HostConfig(connect: widget.connect);
     }
 
-    void _onPressAddConfig(LoginController controller) {
+    void onPressAddConfig(LoginController controller) {
       controller.setCredentials(null);
       final route = MaterialPageRoute(
           builder: (context) => HostConfig(connect: widget.connect));
       Navigator.push(context, route);
     }
 
-    void _onPress(Credentials credentials, LoginController controller) {
+    void onPress(Credentials credentials, LoginController controller) {
       controller.setCredentials(credentials);
       Navigator.push(context, MaterialPageRoute(builder: (conext) {
         return HostConfig(credentials: credentials, connect: widget.connect);
       }));
     }
 
-    void _onPressDelete(Credentials credentials) {
+    void onPressDelete(Credentials credentials) {
       final credentialsName = credentials.host.id;
       showDialog(
           context: context,
@@ -87,9 +87,9 @@ class _HostListState extends State<HostList> {
           });
     }
 
-    void _onSelected(int result, Credentials credential) {
+    void onSelected(int result, Credentials credential) {
       if (result == 1) {
-        _onPressDelete(credential);
+        onPressDelete(credential);
       }
     }
 
@@ -108,23 +108,23 @@ class _HostListState extends State<HostList> {
                 child: ListTile(
                   trailing: PopupMenuButton(
                       icon: const Icon(Icons.more_vert),
-                      onSelected: (int value) => _onSelected(value, credential),
+                      onSelected: (int value) => onSelected(value, credential),
                       itemBuilder: (context) => [
                             const PopupMenuItem(
-                              child: Text('Delete'),
                               value: 1,
+                              child: Text('Delete'),
                             )
                           ]),
                   title: Text(credential.host.user),
                   subtitle: Text(
                       '${credential.host.id}\nPrivate key: ${credential.key?.name ?? 'Empty'}'),
                   isThreeLine: true,
-                  onTap: () => _onPress(credential, controller),
+                  onTap: () => onPress(credential, controller),
                 ),
               );
             }),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => _onPressAddConfig(controller),
+          onPressed: () => onPressAddConfig(controller),
           backgroundColor: Colors.teal,
           child: const Icon(Icons.add),
         ),

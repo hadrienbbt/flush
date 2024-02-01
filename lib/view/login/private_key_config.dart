@@ -69,7 +69,7 @@ class _KeyConfigState extends State<KeyConfig> {
 
   @override
   Widget build(BuildContext context) {
-    void _showToast(BuildContext context, String errorMessage) {
+    void showToast(BuildContext context, String errorMessage) {
       final scaffold = ScaffoldMessenger.of(context);
       scaffold.hideCurrentSnackBar();
       scaffold.showSnackBar(
@@ -81,7 +81,7 @@ class _KeyConfigState extends State<KeyConfig> {
       );
     }
 
-    void _onPressAdd() async {
+    void onPressAdd() async {
       try {
         final privateKey = PrivateKey.create(
             name: _nameController.text.trim(),
@@ -94,7 +94,7 @@ class _KeyConfigState extends State<KeyConfig> {
         loginController.setPrivateKey(privateKey);
         Navigator.pop(context);
       } catch (e) {
-        _showToast(context, e.toString());
+        showToast(context, e.toString());
       }
     }
 
@@ -157,8 +157,9 @@ class _KeyConfigState extends State<KeyConfig> {
         const SizedBox(height: 40),
         TextButton(
             style: TextButton.styleFrom(backgroundColor: Colors.teal),
-            child: const Text('ADD KEY', style: TextStyle(color: Colors.white)),
-            onPressed: _onPressAdd),
+            onPressed: onPressAdd,
+            child:
+                const Text('ADD KEY', style: TextStyle(color: Colors.white))),
         const SizedBox(height: 10),
       ]);
 

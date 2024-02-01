@@ -23,10 +23,10 @@ class _FindServiceState extends State<FindService> {
   }
 
   Widget _renderLoading() {
-    return Column(
+    return const Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: const [
+      children: [
         CircularProgressIndicator(),
         SizedBox(
           height: 20,
@@ -45,7 +45,7 @@ class _FindServiceState extends State<FindService> {
 
   @override
   Widget build(BuildContext context) {
-    void _showToast(String message) {
+    void showToast(String message) {
       final scaffold = ScaffoldMessenger.of(context);
       scaffold.hideCurrentSnackBar();
       scaffold.showSnackBar(
@@ -57,7 +57,7 @@ class _FindServiceState extends State<FindService> {
       );
     }
 
-    void _onServiceTaped(String service) {
+    void onServiceTaped(String service) {
       showDialog(
           context: context,
           builder: (context) {
@@ -84,9 +84,9 @@ class _FindServiceState extends State<FindService> {
                             listen: false)
                         .saveService(service);
                     if (success) {
-                      _showToast('Service Added');
+                      showToast('Service Added');
                     } else {
-                      _showToast('Error adding service');
+                      showToast('Error adding service');
                     }
                   },
                 ),
@@ -95,7 +95,7 @@ class _FindServiceState extends State<FindService> {
           });
     }
 
-    Widget _renderServicesFound() {
+    Widget renderServicesFound() {
       return Consumer<ServicesController>(
           builder: (context, controller, child) {
         if (controller.loading) return _renderLoading();
@@ -116,7 +116,7 @@ class _FindServiceState extends State<FindService> {
                 service.toLowerCase().contains(searchString)) {
               return ListTile(
                 title: Text(service.capitalize()),
-                onTap: () => _onServiceTaped(service),
+                onTap: () => onServiceTaped(service),
               );
             }
             return Container();
@@ -149,7 +149,7 @@ class _FindServiceState extends State<FindService> {
               ),
             ),
             const SizedBox(height: 10),
-            Expanded(child: _renderServicesFound())
+            Expanded(child: renderServicesFound())
           ]),
     );
   }

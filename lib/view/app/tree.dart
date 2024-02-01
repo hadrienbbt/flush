@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
@@ -39,6 +40,7 @@ class _TreeState extends State<Tree> {
     return items;
   }
 
+  // ignore: unused_element
   List<SftpName> get _files {
     return _sftpNames.where((element) => element.attr.isFile).toList();
   }
@@ -84,10 +86,14 @@ class _TreeState extends State<Tree> {
         _sftpNames = sftpNames;
       });
     } on SftpError catch (e) {
-      Navigator.pop(context);
+      if (mounted) {
+        Navigator.pop(context);
+      }
       _showErrorAlert(e);
     } catch (e) {
-      print('Unknown error: ' + e.toString());
+      if (kDebugMode) {
+        print('Unknown error: $e');
+      }
     }
   }
 
@@ -137,7 +143,7 @@ class _TreeState extends State<Tree> {
                     Navigator.pop(context);
                     try {
                       await widget.sftp
-                          .mkdir(widget.path + '/' + _controller.text);
+                          .mkdir('${widget.path}/${_controller.text}');
                     } on SftpError catch (e) {
                       _showErrorAlert(e);
                     }
@@ -163,7 +169,7 @@ class _TreeState extends State<Tree> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Delete ' + (isDir ? 'Folder' : 'File')),
+            title: Text('Delete ${isDir ? 'Folder' : 'File'}'),
             content: Text('Are you sure you want to delete $item?'),
             actions: [
               TextButton(
@@ -181,13 +187,15 @@ class _TreeState extends State<Tree> {
                   Navigator.pop(context);
                   try {
                     if (isDir) {
-                      await widget.sftp.rmdir(widget.path + '/' + item);
+                      await widget.sftp.rmdir('${widget.path}/$item');
                     } else {
-                      await widget.sftp.remove(widget.path + '/' + item);
+                      await widget.sftp.remove('${widget.path}/$item');
                     }
                     _getItemsInTree();
                   } on SftpError catch (e) {
-                    print(e);
+                    if (kDebugMode) {
+                      print(e);
+                    }
                     _showErrorAlert(e);
                   }
                 },
@@ -217,7 +225,7 @@ class _TreeState extends State<Tree> {
                 child: const Text('RUN', style: TextStyle(color: Colors.white)),
                 onPressed: () async {
                   Navigator.pop(context);
-                  widget.runCommand('sudo bash ' + path);
+                  widget.runCommand('sudo bash $path');
                   _showToast(context, 'Script running');
                 },
               ),
@@ -227,7 +235,7 @@ class _TreeState extends State<Tree> {
   }
 
   void _onTap(int index) async {
-    final newPath = widget.path + '/' + _items[index];
+    final newPath = '${widget.path}/${_items[index]}';
     if (_dirs.map((e) => e.filename).toList().contains(_items[index])) {
       Navigator.push(context, MaterialPageRoute(builder: (conext) {
         return Tree(
@@ -242,17 +250,19 @@ class _TreeState extends State<Tree> {
       if (extension == '.sh') {
         _showRunScriptDialog(_items[index], newPath);
       } else {
-        final content = await widget.runCommand('cat ' + newPath);
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(widget.path),
-            ),
-            body: SingleChildScrollView(
-              child: Text(content),
-            ),
-          );
-        }));
+        final content = await widget.runCommand('cat $newPath');
+        if (mounted) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(widget.path),
+              ),
+              body: SingleChildScrollView(
+                child: Text(content),
+              ),
+            );
+          }));
+        }
       }
     }
   }
@@ -289,8 +299,7 @@ class _TreeState extends State<Tree> {
               return [
                 PopupMenuItem<int>(
                   value: 0,
-                  child:
-                      Text((_hiddenFiles ? 'Hide' : 'Show') + ' hidden files'),
+                  child: Text('${_hiddenFiles ? 'Hide' : 'Show'} hidden files'),
                 ),
                 const PopupMenuItem<int>(
                   value: 1,

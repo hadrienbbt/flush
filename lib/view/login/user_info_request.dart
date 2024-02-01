@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// ignore: implementation_imports
 import 'package:dartssh2/src/ssh_userauth.dart' show SSHUserInfoRequest;
 
 class UserInfoAlert extends StatelessWidget {
@@ -11,10 +12,10 @@ class UserInfoAlert extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<TextEditingController> _controllers =
+    List<TextEditingController> controllers =
         request.prompts.map((e) => TextEditingController()).toList();
 
-    Widget _renderTextFields() {
+    Widget renderTextFields() {
       return Wrap(
           children: request.prompts
               .asMap()
@@ -23,7 +24,7 @@ class UserInfoAlert extends StatelessWidget {
                   Wrap(
                     children: [
                       TextField(
-                        controller: _controllers[i],
+                        controller: controllers[i],
                         obscureText: !prompt.echo,
                         decoration:
                             InputDecoration(hintText: prompt.promptText),
@@ -43,7 +44,7 @@ class UserInfoAlert extends StatelessWidget {
 
     return AlertDialog(
       title: Text(title),
-      content: Wrap(children: [Text(instructions), _renderTextFields()]),
+      content: Wrap(children: [Text(instructions), renderTextFields()]),
       actions: [
         TextButton(
             style: TextButton.styleFrom(backgroundColor: Colors.white),
@@ -55,7 +56,7 @@ class UserInfoAlert extends StatelessWidget {
           style: TextButton.styleFrom(backgroundColor: Colors.teal),
           child: const Text('OK', style: TextStyle(color: Colors.white)),
           onPressed: () {
-            sendUserInfo(_controllers.map((e) => e.text).toList());
+            sendUserInfo(controllers.map((e) => e.text).toList());
           },
         ),
       ],

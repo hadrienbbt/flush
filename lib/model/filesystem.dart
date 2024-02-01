@@ -21,14 +21,15 @@ class File {
     await runCommand('sudo chmod "$permission" "$fullpath"');
   }
 
+  // ignore: unused_element
   Future<List<File>> _getFiles(String pathname, bool hiddenFiles,
       Future<String> Function(String) runCommand) async {
     String cmd = 'ls -';
     if (hiddenFiles) {
-      cmd = cmd + 'a';
+      cmd = '${cmd}a';
     }
     final path = pathname.isEmpty ? '/' : pathname;
-    cmd = cmd + 'p ' + path + '| grep -v /';
+    cmd = '${cmd}p $path| grep -v /';
     final res = await runCommand(cmd);
     if (res.isEmpty) return [];
     return res
@@ -37,14 +38,15 @@ class File {
         .toList();
   }
 
+  // ignore: unused_element
   Future<List<Directory>> _getDirectories(String pathname, bool hiddenFiles,
       Future<String> Function(String) runCommand) async {
     String cmd = 'ls -';
     if (hiddenFiles) {
-      cmd = cmd + 'a';
+      cmd = '${cmd}a';
     }
     final path = pathname.isEmpty ? '/' : pathname;
-    cmd = cmd + 'p ' + path + '| grep /';
+    cmd = '${cmd}p $path| grep /';
     final res = await runCommand(cmd);
     if (res.isEmpty) return [];
     return res
@@ -143,7 +145,7 @@ class Service extends File {
   }
 
   Future<String> _runAction(String action) async {
-    return await runCommand('sudo systemctl ' + action + ' ' + name);
+    return await runCommand('sudo systemctl $action $name');
   }
 
   void save(String hostId) async {

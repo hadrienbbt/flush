@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-
 import 'package:flush/model/credentials.dart';
 import 'package:flush/model/private_key.dart';
 import 'package:flush/model/host.dart';

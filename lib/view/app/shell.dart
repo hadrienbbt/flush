@@ -1,7 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dartssh2/dartssh2.dart';
 import 'dart:async';
-import 'dart:typed_data';
 import 'dart:io';
 
 class Shell extends StatefulWidget {
@@ -35,7 +35,9 @@ class _ShellState extends State<Shell> {
 
     await session
         .done; // Wait for session to exit to ensure all data is flushed to the remote process.
-    print(session.exitCode);
+    if (kDebugMode) {
+      print(session.exitCode);
+    }
   }
 
   _restartShell() {
@@ -55,6 +57,7 @@ class _ShellState extends State<Shell> {
     _shell.write(bytes);
   }
 
+  // ignore: unused_element
   _onData(Uint8List event) {
     setState(() {
       _stdout = [..._stdout, String.fromCharCodes(event)];
@@ -77,7 +80,9 @@ class _ShellState extends State<Shell> {
       _shell = shell;
     });
     await shell.done;
-    print('Session terminated');
+    if (kDebugMode) {
+      print('Session terminated');
+    }
     // listener!.cancel();
     // listener = null;
   }

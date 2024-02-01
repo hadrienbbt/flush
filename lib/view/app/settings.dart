@@ -8,7 +8,7 @@ class Settings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Consumer _renderFeatureFlags() {
+    Consumer renderFeatureFlags() {
       return Consumer<FeatureFlagsController>(
           builder: (context, controller, child) {
         return Column(
@@ -28,6 +28,6 @@ class Settings extends StatelessWidget {
     }
 
     return Padding(
-        padding: const EdgeInsets.all(15), child: _renderFeatureFlags());
+        padding: const EdgeInsets.all(15), child: renderFeatureFlags());
   }
 }

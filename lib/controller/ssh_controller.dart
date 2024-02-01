@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:dartssh2/dartssh2.dart';
+// ignore: implementation_imports
 import 'package:dartssh2/src/ssh_userauth.dart'
     show SSHUserInfoRequest, SSHUserInfoPrompt;
 import 'package:tuple/tuple.dart';
@@ -154,7 +155,7 @@ class _SSHControllerState extends State<SSHController> {
 
   @override
   Widget build(BuildContext context) {
-    FutureOr<void> _displayTextInputDialog() async {
+    FutureOr<void> displayTextInputDialog() async {
       if (_userInfoRequest == null) return;
       return showDialog(
           barrierDismissible: false,
@@ -169,25 +170,25 @@ class _SSHControllerState extends State<SSHController> {
           });
     }
 
-    FutureOr<UserInfo?> _onUserInfoRequest(SSHUserInfoRequest request) async {
+    FutureOr<UserInfo?> onUserInfoRequest(SSHUserInfoRequest request) async {
       if (request.prompts.isEmpty) {
         return [];
       }
       setState(() {
         _userInfoRequest = request;
       });
-      await _displayTextInputDialog();
+      await displayTextInputDialog();
       return _userInfo;
     }
 
-    FutureOr<String?> _onPasswordRequest() async {
+    FutureOr<String?> onPasswordRequest() async {
       final prompt = SSHUserInfoPrompt('Password', false);
       final request = SSHUserInfoRequest('Password Request', '', [prompt]);
-      final userInfo = await _onUserInfoRequest(request);
+      final userInfo = await onUserInfoRequest(request);
       return userInfo?.first;
     }
 
-    Future<void> _connect({ErrorHandler? onError}) async {
+    Future<void> connect({ErrorHandler? onError}) async {
       LoginController loginController =
           Provider.of<LoginController>(context, listen: false);
 
@@ -208,7 +209,9 @@ class _SSHControllerState extends State<SSHController> {
         final errorMessage = resolver.item2;
 
         if (errorMessage != null) {
-          Navigator.pop(context);
+          if (mounted) {
+            Navigator.pop(context);
+          }
           loginController.setConnectingFinished(isConnected: false);
           if (onError != null) {
             onError(errorMessage);
@@ -225,13 +228,15 @@ class _SSHControllerState extends State<SSHController> {
             username: credentials.host.user,
             identities: keypairs,
             onAuthenticated: () => _onAuthenticated(loginController),
-            onUserInfoRequest: _onUserInfoRequest,
-            onPasswordRequest: _onPasswordRequest,
+            onUserInfoRequest: onUserInfoRequest,
+            onPasswordRequest: onPasswordRequest,
             onUserauthBanner: (String banner) =>
                 loginController.setConnectionState(banner));
         _setClient(client, loginController, onError);
       } catch (e) {
-        Navigator.pop(context);
+        if (mounted) {
+          Navigator.pop(context);
+        }
         loginController.setConnectingFinished(isConnected: false);
         if (onError != null) {
           onError(e.toString());
@@ -239,6 +244,6 @@ class _SSHControllerState extends State<SSHController> {
       }
     }
 
-    return HostList(connect: _connect);
+    return HostList(connect: connect);
   }
 }

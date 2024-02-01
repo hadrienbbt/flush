@@ -14,7 +14,7 @@ class SSHDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Consumer _renderFeatureFlags() {
+    Consumer renderFeatureFlags() {
       return Consumer<FeatureFlagsController>(
           builder: (context, controller, child) {
         return Column(
@@ -41,7 +41,7 @@ class SSHDrawer extends StatelessWidget {
             ),
             child: Header(),
           ),
-          _renderFeatureFlags(),
+          renderFeatureFlags(),
           ListTile(
             trailing: const Icon(Icons.chevron_right),
             title: const Text('Settings'),

@@ -48,7 +48,7 @@ class _HostConfigState extends State<HostConfig> {
 
   @override
   Widget build(BuildContext context) {
-    void _showToast(BuildContext context, String errorMessage) {
+    void showToast(BuildContext context, String errorMessage) {
       if (kDebugMode) {
         print(errorMessage);
       }
@@ -63,20 +63,20 @@ class _HostConfigState extends State<HostConfig> {
       );
     }
 
-    void _onPressConnect() async {
+    void onPressConnect() async {
       final String hostname = _hostController.text.trim();
       if (hostname.isEmpty) {
-        return _showToast(context, 'No host provided');
+        return showToast(context, 'No host provided');
       }
 
       final int? port = int.tryParse(_portController.text.trim());
       if (port == null) {
-        return _showToast(context, 'No port provided');
+        return showToast(context, 'No port provided');
       }
 
       final String username = _usernameController.text.trim();
       if (username.isEmpty) {
-        return _showToast(context, 'No username provided');
+        return showToast(context, 'No username provided');
       }
 
       LoginController loginController =
@@ -89,11 +89,11 @@ class _HostConfigState extends State<HostConfig> {
       loginController.setHost(host);
 
       widget.connect(onError: (error) {
-        _showToast(context, error ?? 'Unable to login');
+        showToast(context, error ?? 'Unable to login');
       });
     }
 
-    List<Widget> _renderHost() {
+    List<Widget> renderHost() {
       return [
         TextField(
             controller: _hostController,
@@ -130,7 +130,7 @@ class _HostConfigState extends State<HostConfig> {
       ];
     }
 
-    Widget _renderPrivateKey() {
+    Widget renderPrivateKey() {
       return Consumer<LoginController>(
         builder: (context, controller, child) {
           return ListTile(
@@ -162,14 +162,14 @@ class _HostConfigState extends State<HostConfig> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
             child: Column(children: [
-              ..._renderHost(),
-              _renderPrivateKey(),
+              ...renderHost(),
+              renderPrivateKey(),
               const SizedBox(height: 40),
               TextButton(
                   style: TextButton.styleFrom(backgroundColor: Colors.teal),
+                  onPressed: onPressConnect,
                   child: const Text('CONNECT',
-                      style: TextStyle(color: Colors.white)),
-                  onPressed: _onPressConnect),
+                      style: TextStyle(color: Colors.white))),
               const SizedBox(height: 10),
             ]),
           ),

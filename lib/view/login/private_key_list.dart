@@ -35,7 +35,7 @@ class _PrivateKeyListState extends State<PrivateKeyList> {
 
   @override
   Widget build(BuildContext context) {
-    void _onPressDelete(PrivateKey key) {
+    void onPressDelete(PrivateKey key) {
       final keyName = key.name;
       showDialog(
           context: context,
@@ -65,19 +65,19 @@ class _PrivateKeyListState extends State<PrivateKeyList> {
           });
     }
 
-    void _onSelected(int result, PrivateKey key) {
+    void onSelected(int result, PrivateKey key) {
       if (result == 1) {
-        _onPressDelete(key);
+        onPressDelete(key);
       }
     }
 
-    void _onPressAddKey() async {
+    void onPressAddKey() async {
       final route = MaterialPageRoute(builder: (context) => const KeyConfig());
       await Navigator.push(context, route);
       _setSavedKeys();
     }
 
-    void _onPressSelectKey(PrivateKey key) {
+    void onPressSelectKey(PrivateKey key) {
       LoginController loginController =
           Provider.of<LoginController>(context, listen: false);
       loginController.setPrivateKey(key);
@@ -100,22 +100,22 @@ class _PrivateKeyListState extends State<PrivateKeyList> {
               child: ListTile(
                 trailing: PopupMenuButton(
                   icon: const Icon(Icons.more_vert),
-                  onSelected: (int value) => _onSelected(value, key),
+                  onSelected: (int value) => onSelected(value, key),
                   itemBuilder: (context) => [
                     const PopupMenuItem(
-                      child: Text('Delete'),
                       value: 1,
+                      child: Text('Delete'),
                     )
                   ],
                 ),
                 title: Text(key.name),
                 subtitle: Text(key.type),
-                onTap: () => _onPressSelectKey(key),
+                onTap: () => onPressSelectKey(key),
               ),
             );
           }),
       floatingActionButton: FloatingActionButton(
-        onPressed: _onPressAddKey,
+        onPressed: onPressAddKey,
         backgroundColor: Colors.teal,
         child: const Icon(Icons.add),
       ),

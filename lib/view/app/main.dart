@@ -98,7 +98,7 @@ class _AppState extends State<App> {
     final servicesController =
         Provider.of<ServicesController>(context, listen: false);
 
-    Widget? _renderFloatingButton() {
+    Widget? renderFloatingButton() {
       if (_route == 'services') {
         final route = MaterialPageRoute(
             builder: (context) => ListenableProvider<ServicesController>.value(
@@ -119,7 +119,7 @@ class _AppState extends State<App> {
       appBar: AppBar(title: Text(_getTitle())),
       body: _renderApp(),
       drawer: SSHDrawer(showScreen: _showScreen, disconnect: widget.disconnect),
-      floatingActionButton: _renderFloatingButton(),
+      floatingActionButton: renderFloatingButton(),
     );
   }
 }

@@ -20,7 +20,7 @@ class ServiceList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void _showToast(String message) {
+    void showToast(String message) {
       final scaffold = ScaffoldMessenger.of(context);
       scaffold.hideCurrentSnackBar();
       scaffold.showSnackBar(
@@ -32,12 +32,12 @@ class ServiceList extends StatelessWidget {
       );
     }
 
-    Future<void> _onSelected(
+    Future<void> onSelected(
         int result, Service service, ServicesController controller) async {
       if (result == 0) {
         await controller.toggleEnabled(service.id);
         final updatedService = controller.get(service.id);
-        _showToast(
+        showToast(
             'Service ${updatedService.isEnabled ? 'Enabled' : 'Disabled'}');
       } else if (result == 1) {
         showDialog(
@@ -63,7 +63,7 @@ class ServiceList extends StatelessWidget {
                     onPressed: () async {
                       Navigator.pop(context);
                       await controller.remove(service.id);
-                      _showToast('Service Removed');
+                      showToast('Service Removed');
                     },
                   ),
                 ],
@@ -72,36 +72,34 @@ class ServiceList extends StatelessWidget {
       }
     }
 
-    Widget _renderActionButtons(
-        Service service, ServicesController controller) {
-      Future<void> _toggleActive() async {
+    Widget renderActionButtons(Service service, ServicesController controller) {
+      Future<void> toggleActive() async {
         await controller.toggleActive(service.id);
         final updatedService = controller.get(service.id);
-        _showToast(
-            'Service ${updatedService.isActive ? 'Started' : 'Stopped'}');
+        showToast('Service ${updatedService.isActive ? 'Started' : 'Stopped'}');
       }
 
-      Future<void> _restart() async {
+      Future<void> restart() async {
         await controller.restart(service.id);
-        _showToast('Service Restarted');
+        showToast('Service Restarted');
       }
 
       final activeIconButton = IconButton(
-          onPressed: _toggleActive,
+          onPressed: toggleActive,
           icon: Icon(service.isActive ? Icons.stop : Icons.play_arrow));
       final restartIconButton =
-          IconButton(onPressed: _restart, icon: const Icon(Icons.restart_alt));
+          IconButton(onPressed: restart, icon: const Icon(Icons.restart_alt));
       final menuButton = PopupMenuButton(
           icon: const Icon(Icons.more_vert),
-          onSelected: (int value) => _onSelected(value, service, controller),
+          onSelected: (int value) => onSelected(value, service, controller),
           itemBuilder: (context) => [
                 PopupMenuItem(
-                  child: Text(service.isEnabled ? 'Disable' : 'Enable'),
                   value: 0,
+                  child: Text(service.isEnabled ? 'Disable' : 'Enable'),
                 ),
                 const PopupMenuItem(
-                  child: Text('Delete'),
                   value: 1,
+                  child: Text('Delete'),
                 )
               ]);
       List<Widget> buttons = [menuButton];
@@ -142,7 +140,7 @@ class ServiceList extends StatelessWidget {
                       height: 25,
                       child: CircularProgressIndicator(),
                     )
-                  : _renderActionButtons(service, controller),
+                  : renderActionButtons(service, controller),
               onTap: () {
                 final route = MaterialPageRoute(
                     builder: (context) =>

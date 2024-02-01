@@ -1,8 +1,10 @@
+import 'package:flush/controller/login_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flush/controller/ssh_controller.dart' show ErrorHandler;
 import 'package:flush/model/credentials.dart';
 import 'package:flush/view/login/host_config.dart';
+import 'package:provider/provider.dart';
 
 class HostList extends StatefulWidget {
   final Future<void> Function({ErrorHandler? onError}) connect;
@@ -40,13 +42,15 @@ class _HostListState extends State<HostList> {
       return HostConfig(connect: widget.connect);
     }
 
-    void _onPressAddConfig() {
+    void _onPressAddConfig(LoginController controller) {
+      controller.setCredentials(null);
       final route = MaterialPageRoute(
           builder: (context) => HostConfig(connect: widget.connect));
       Navigator.push(context, route);
     }
 
-    void _onPress(Credentials credentials) {
+    void _onPress(Credentials credentials, LoginController controller) {
+      controller.setCredentials(credentials);
       Navigator.push(context, MaterialPageRoute(builder: (conext) {
         return HostConfig(credentials: credentials, connect: widget.connect);
       }));
@@ -89,38 +93,42 @@ class _HostListState extends State<HostList> {
       }
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Saved SSH Configs'),
-      ),
-      body: ListView.separated(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          separatorBuilder: (context, index) => const SizedBox(height: 8),
-          itemCount: _savedCredentials.length,
-          itemBuilder: (context, index) {
-            final credential = _savedCredentials[index];
-            return Card(
-              child: ListTile(
-                trailing: PopupMenuButton(
-                    icon: const Icon(Icons.more_vert),
-                    onSelected: (int value) => _onSelected(value, credential),
-                    itemBuilder: (context) => [
-                          const PopupMenuItem(
-                            child: Text('Delete'),
-                            value: 1,
-                          )
-                        ]),
-                title: Text(credential.host.user),
-                subtitle: Text(credential.host.name),
-                onTap: () => _onPress(credential),
-              ),
-            );
-          }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _onPressAddConfig,
-        backgroundColor: Colors.teal,
-        child: const Icon(Icons.add),
-      ),
-    );
+    return Consumer<LoginController>(builder: (context, controller, child) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Saved SSH Configs'),
+        ),
+        body: ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            separatorBuilder: (context, index) => const SizedBox(height: 8),
+            itemCount: _savedCredentials.length,
+            itemBuilder: (context, index) {
+              final credential = _savedCredentials[index];
+              return Card(
+                child: ListTile(
+                  trailing: PopupMenuButton(
+                      icon: const Icon(Icons.more_vert),
+                      onSelected: (int value) => _onSelected(value, credential),
+                      itemBuilder: (context) => [
+                            const PopupMenuItem(
+                              child: Text('Delete'),
+                              value: 1,
+                            )
+                          ]),
+                  title: Text(credential.host.user),
+                  subtitle: Text(
+                      '${credential.host.id}\nPrivate key: ${credential.key?.name ?? 'Empty'}'),
+                  isThreeLine: true,
+                  onTap: () => _onPress(credential, controller),
+                ),
+              );
+            }),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => _onPressAddConfig(controller),
+          backgroundColor: Colors.teal,
+          child: const Icon(Icons.add),
+        ),
+      );
+    });
   }
 }

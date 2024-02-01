@@ -197,21 +197,24 @@ class _SSHControllerState extends State<SSHController> {
         return;
       }
 
-      loginController.setConnectionState('Decoding private key...');
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Connecting()));
+      List<SSHKeyPair>? keypairs;
+      if (credentials.key != null) {
+        loginController.setConnectionState('Decoding private key...');
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const Connecting()));
 
-      final resolver = await getKeyPairs(credentials.key);
-      final keypairs = resolver.item1;
-      final errorMessage = resolver.item2;
+        final resolver = await getKeyPairs(credentials.key!);
+        keypairs = resolver.item1;
+        final errorMessage = resolver.item2;
 
-      if (errorMessage != null) {
-        Navigator.pop(context);
-        loginController.setConnectingFinished(isConnected: false);
-        if (onError != null) {
-          onError(errorMessage);
+        if (errorMessage != null) {
+          Navigator.pop(context);
+          loginController.setConnectingFinished(isConnected: false);
+          if (onError != null) {
+            onError(errorMessage);
+          }
+          return;
         }
-        return;
       }
 
       loginController.setConnectionState('Connecting...');

@@ -33,6 +33,8 @@ class _HostConfigState extends State<HostConfig> {
       _hostController.text = c.host.name;
       _usernameController.text = c.host.user;
       _portController.text = c.host.port.toString();
+    } else {
+      _portController.text = '22';
     }
   }
 
@@ -85,11 +87,6 @@ class _HostConfigState extends State<HostConfig> {
           port: int.tryParse(_portController.text.trim()),
           user: _usernameController.text.trim());
       loginController.setHost(host);
-
-      final privateKey = loginController.privateKey;
-      if (privateKey == null) {
-        return _showToast(context, 'No private key provided');
-      }
 
       widget.connect(onError: (error) {
         _showToast(context, error ?? 'Unable to login');

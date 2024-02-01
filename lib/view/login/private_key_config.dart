@@ -28,9 +28,9 @@ class _KeyConfigState extends State<KeyConfig> {
     super.initState();
     final c = widget.credentials;
     if (c != null) {
-      _keyController.text = c.key.pemText;
-      if (c.key.passphrase != null) {
-        _passphraseController.text = c.key.passphrase!;
+      _keyController.text = c.key?.pemText ?? '';
+      if (c.key?.passphrase != null) {
+        _passphraseController.text = c.key?.passphrase ?? '';
       }
       _onKeyChange();
     }

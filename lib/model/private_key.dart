@@ -60,7 +60,8 @@ class PrivateKey {
     prefs.remove('$id/passphrase:');
   }
 
-  static Future<PrivateKey?> get(String id) async {
+  static Future<PrivateKey?> get(String? id) async {
+    if (id == null) return null;
     final prefs = await SharedPreferences.getInstance();
     String? name = prefs.getString('$id/name:');
     String? pemText = prefs.getString('$id/pemText:');

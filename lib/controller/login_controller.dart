@@ -35,8 +35,8 @@ class LoginController extends ChangeNotifier {
   }
 
   Credentials? get credentials {
-    if (_host == null || _privateKey == null) return null;
-    return Credentials(host: _host!, key: _privateKey!);
+    if (_host == null) return null;
+    return Credentials(host: _host!, key: _privateKey);
   }
 
   void setCredentials(Credentials? credentials) {

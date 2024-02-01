@@ -115,9 +115,9 @@ class _HostListState extends State<HostList> {
                               child: Text('Delete'),
                             )
                           ]),
-                  title: Text(credential.host.user),
+                  title: Text(credential.host.name),
                   subtitle: Text(
-                      '${credential.host.id}\nPrivate key: ${credential.key?.name ?? 'Empty'}'),
+                      'User: ${credential.host.user}\nPrivate key: ${credential.key?.name ?? 'Empty'}'),
                   isThreeLine: true,
                   onTap: () => onPress(credential, controller),
                 ),

@@ -109,7 +109,8 @@ class _AppState extends State<App> {
           onPressed: () {
             Navigator.push(context, route);
           },
-          child: const Icon(Icons.add),
+          backgroundColor: Colors.teal,
+          child: const Icon(Icons.add, color: Colors.white),
         );
       }
       return null;

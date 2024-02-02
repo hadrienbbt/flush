@@ -126,7 +126,7 @@ class _HostListState extends State<HostList> {
         floatingActionButton: FloatingActionButton(
           onPressed: () => onPressAddConfig(controller),
           backgroundColor: Colors.teal,
-          child: const Icon(Icons.add),
+          child: const Icon(Icons.add, color: Colors.white),
         ),
       );
     });

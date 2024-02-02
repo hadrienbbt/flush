@@ -1,3 +1,4 @@
+import 'package:flush/view/app/systemd/find_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -116,14 +117,43 @@ class ServiceList extends StatelessWidget {
       );
     }
 
+    Widget renderEmpty(ServicesController controller) {
+      final route = MaterialPageRoute(
+          builder: (context) => ListenableProvider<ServicesController>.value(
+                value: controller,
+                child: const FindService(),
+              ));
+      return SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text(
+              "Add service",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 30.0, color: Colors.black),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            FloatingActionButton(
+              onPressed: () {
+                Navigator.push(context, route);
+              },
+              backgroundColor: Colors.teal,
+              child: const Icon(Icons.add, color: Colors.white),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Consumer<ServicesController>(builder: (context, controller, child) {
       if (controller.loading) return _renderLoading();
-      if (controller.services.isEmpty) {
-        return const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: Text('No systemd service'),
-        );
-      }
+      if (controller.services.isEmpty) return renderEmpty(controller);
+
       return ListView.builder(
           itemCount: controller.services.length,
           itemBuilder: (context, index) {

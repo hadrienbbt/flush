@@ -105,6 +105,9 @@ class _AppState extends State<App> {
                   value: servicesController,
                   child: const FindService(),
                 ));
+        if (servicesController.services.isEmpty) {
+          return null;
+        }
         return FloatingActionButton(
           onPressed: () {
             Navigator.push(context, route);

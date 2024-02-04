@@ -17,7 +17,7 @@
                BlueprintIdentifier = "33CC111A2044C6BA0003C045"
                BuildableName = "Flutter Assemble"
                BlueprintName = "Flutter Assemble"
-               ReferencedContainer = "container:FluSH.xcodeproj">
+               ReferencedContainer = "container:Runner.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -52,7 +52,7 @@
             BlueprintIdentifier = "33CC111A2044C6BA0003C045"
             BuildableName = "Flutter Assemble"
             BlueprintName = "Flutter Assemble"
-            ReferencedContainer = "container:FluSH.xcodeproj">
+            ReferencedContainer = "container:Runner.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

@@ -123,7 +123,6 @@ class _SSHControllerState extends State<SSHController> {
   }
 
   void _onAuthenticated(LoginController loginController) async {
-    loginController.setConnectingFinished();
     if (loginController.credentials != null) {
       loginController.credentials!.save();
     }
@@ -150,6 +149,8 @@ class _SSHControllerState extends State<SSHController> {
         ),
       ),
     );
+    loginController.setConnectingFinished();
+
     runApp(app);
   }
 

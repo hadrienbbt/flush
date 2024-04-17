@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:convert' show utf8;
 
 import 'package:flush/main.dart';
+import 'package:flush/model/flush_ssh_socket.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -216,7 +217,7 @@ class _SSHControllerState extends State<SSHController> {
       loginController.setConnectionState('Connecting...');
       try {
         final client = SSHClient(
-            await SSHSocket.connect(
+            await FlushSSHSocket.connect(
                 credentials.host.name, credentials.host.port!),
             username: credentials.host.user,
             identities: keypairs,

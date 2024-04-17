@@ -1,4 +1,5 @@
 import 'package:flush/model/host.dart';
+import 'package:flush/view/login/connecting.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -88,7 +89,11 @@ class _HostConfigState extends State<HostConfig> {
           user: _usernameController.text.trim());
       loginController.setHost(host);
 
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const Connecting()));
+
       widget.connect(onError: (error) {
+        Navigator.pop(context);
         showToast(context, error ?? 'Unable to login');
       });
     }

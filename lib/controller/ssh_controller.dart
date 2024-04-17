@@ -22,7 +22,6 @@ import 'package:flush/model/private_key.dart';
 import 'package:flush/view/login/host_list.dart';
 import 'package:flush/view/app/main.dart';
 import 'package:flush/view/login/user_info_request.dart';
-import 'package:flush/view/login/connecting.dart';
 
 typedef UserInfo = List<String>;
 typedef KeyPairs = List<SSHKeyPair>;
@@ -78,7 +77,6 @@ class _SSHControllerState extends State<SSHController> {
     client.done.then(
       (_) => loginController.setConnectingFinished(isConnected: false),
       onError: (e) {
-        Navigator.pop(context);
         loginController.setConnectingFinished(isConnected: false);
         if (onError != null) {
           if (e is SSHAuthFailError) {
@@ -202,17 +200,12 @@ class _SSHControllerState extends State<SSHController> {
       List<SSHKeyPair>? keypairs;
       if (credentials.key != null) {
         loginController.setConnectionState('Decoding private key...');
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const Connecting()));
 
         final resolver = await getKeyPairs(credentials.key!);
         keypairs = resolver.item1;
         final errorMessage = resolver.item2;
 
         if (errorMessage != null) {
-          if (mounted) {
-            Navigator.pop(context);
-          }
           loginController.setConnectingFinished(isConnected: false);
           if (onError != null) {
             onError(errorMessage);
@@ -235,9 +228,6 @@ class _SSHControllerState extends State<SSHController> {
                 loginController.setConnectionState(banner));
         _setClient(client, loginController, onError);
       } catch (e) {
-        if (mounted) {
-          Navigator.pop(context);
-        }
         loginController.setConnectingFinished(isConnected: false);
         if (onError != null) {
           onError(e.toString());

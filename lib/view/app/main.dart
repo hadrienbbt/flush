@@ -96,7 +96,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     final servicesController =
-        Provider.of<ServicesController>(context, listen: false);
+        Provider.of<ServicesController>(context, listen: true);
 
     Widget? renderFloatingButton() {
       if (_route == 'services') {

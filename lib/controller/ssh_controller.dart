@@ -80,10 +80,9 @@ class _SSHControllerState extends State<SSHController> {
         loginController.setConnectingFinished(isConnected: false);
         if (onError != null) {
           if (e is SSHAuthFailError) {
-            onError('Auth failed');
-            print(e.message);
+            onError('Auth failed: ${e.message}');
           } else {
-            onError(e);
+            onError(e.toString());
           }
         }
       },

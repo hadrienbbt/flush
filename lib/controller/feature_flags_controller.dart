@@ -4,9 +4,13 @@ class FeatureFlag {
   String title;
   String screen;
   bool isEnabled;
+  bool isExperimental;
 
   FeatureFlag(
-      {required this.title, required this.screen, required this.isEnabled});
+      {required this.title,
+      required this.screen,
+      required this.isEnabled,
+      required this.isExperimental});
 
   void setEnabled(bool enabled) {
     isEnabled = enabled;
@@ -15,10 +19,23 @@ class FeatureFlag {
 
 class FeatureFlagsController extends ChangeNotifier {
   final List<FeatureFlag> _flags = [
-    FeatureFlag(title: 'Systemd', screen: 'services', isEnabled: true),
-    FeatureFlag(title: 'Commands', screen: 'commands', isEnabled: false),
-    FeatureFlag(title: 'Tree', screen: 'tree', isEnabled: true),
-    FeatureFlag(title: 'Shell', screen: 'shell', isEnabled: false),
+    FeatureFlag(
+        title: 'Systemd',
+        screen: 'services',
+        isExperimental: false,
+        isEnabled: true),
+    FeatureFlag(
+        title: 'Commands',
+        screen: 'commands',
+        isExperimental: true,
+        isEnabled: false),
+    FeatureFlag(
+        title: 'Tree', screen: 'tree', isExperimental: false, isEnabled: true),
+    FeatureFlag(
+        title: 'Shell',
+        screen: 'shell',
+        isExperimental: true,
+        isEnabled: false),
   ];
 
   List<FeatureFlag> get featureFlags {

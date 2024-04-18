@@ -15,7 +15,9 @@ class Settings extends StatelessWidget {
             children: controller.featureFlags
                 .map((e) => Row(
                       children: [
-                        Text(e.title),
+                        Text(e.isExperimental
+                            ? "[Experimental] ${e.title}"
+                            : e.title),
                         const Spacer(),
                         Switch(
                             value: e.isEnabled,

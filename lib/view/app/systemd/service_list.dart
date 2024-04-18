@@ -45,9 +45,9 @@ class ServiceList extends StatelessWidget {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: const Text('Delete Service'),
+                title: const Text('Remove from favorite'),
                 content: Text(
-                    'Do you want to delete the service ${service.title.capitalize()} ?'),
+                    'Do you want to remove the service ${service.title.capitalize()} from your list of favorite services? (You can add it later)'),
                 actions: [
                   TextButton(
                       style:
@@ -59,12 +59,12 @@ class ServiceList extends StatelessWidget {
                       }),
                   TextButton(
                     style: TextButton.styleFrom(backgroundColor: Colors.teal),
-                    child: const Text('DELETE',
+                    child: const Text('REMOVE',
                         style: TextStyle(color: Colors.white)),
                     onPressed: () async {
                       Navigator.pop(context);
                       await controller.remove(service.id);
-                      showToast('Service Removed');
+                      showToast('Remove service from favorite list');
                     },
                   ),
                 ],
@@ -100,7 +100,7 @@ class ServiceList extends StatelessWidget {
                 ),
                 const PopupMenuItem(
                   value: 1,
-                  child: Text('Delete'),
+                  child: Text('Remove from favorite'),
                 )
               ]);
       List<Widget> buttons = [menuButton];
@@ -134,6 +134,11 @@ class ServiceList extends StatelessWidget {
               "Add service",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 30.0, color: Colors.black),
+            ),
+            const Text(
+              "Favorite services will appear here",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 20.0, color: Colors.grey),
             ),
             const SizedBox(
               height: 20,

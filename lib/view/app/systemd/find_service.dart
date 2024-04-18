@@ -62,9 +62,9 @@ class _FindServiceState extends State<FindService> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: const Text('Add Service'),
+              title: const Text('Add favorite service'),
               content: Text(
-                  'Do you want to add $service to your list of services ?'),
+                  'Do you want to add $service to your list of favorite services?'),
               actions: [
                 TextButton(
                     style: TextButton.styleFrom(backgroundColor: Colors.white),
@@ -84,9 +84,9 @@ class _FindServiceState extends State<FindService> {
                             listen: false)
                         .saveService(service);
                     if (success) {
-                      showToast('Service Added');
+                      showToast('Added service to favorite list');
                     } else {
-                      showToast('Error adding service');
+                      showToast('Error adding favorite service');
                     }
                   },
                 ),
@@ -126,7 +126,7 @@ class _FindServiceState extends State<FindService> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Service')),
+      appBar: AppBar(title: const Text('Add Favorite Service')),
       body: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,

@@ -12,7 +12,7 @@ class ServicesController extends ChangeNotifier {
   List<String> _servicesFound = [];
   bool _loading = true;
 
-  SortOptions _selectedSortOption = SortOptions.alphabetically;
+  SortOptions _selectedSortOption = SortOptions.status;
   bool _reverseOrder = false;
 
   ServicesController({required this.hostId, required this.runCommand}) {
@@ -47,7 +47,12 @@ class ServicesController extends ChangeNotifier {
     _loading = true;
     _services.clear();
     _services = await Service.getList(hostId, runCommand);
-    _services.sort((a, b) => a.title.compareTo(b.title));
+    _services.sort((a, b) {
+      if (a.isActive == b.isActive) {
+        return a.title.compareTo(b.title);
+      }
+      return a.isActive ? -1 : 1;
+    });
     _loading = false;
     notifyListeners();
   }

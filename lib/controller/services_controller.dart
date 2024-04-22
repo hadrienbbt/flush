@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 
 import 'package:flush/model/filesystem.dart';
 
+enum SortOptions { alphabetically, status }
+
 class ServicesController extends ChangeNotifier {
   String hostId;
   Future<String> Function(String) runCommand;
@@ -9,6 +11,9 @@ class ServicesController extends ChangeNotifier {
   List<Service> _services = [];
   List<String> _servicesFound = [];
   bool _loading = true;
+
+  SortOptions _selectedSortOption = SortOptions.alphabetically;
+  bool _reverseOrder = false;
 
   ServicesController({required this.hostId, required this.runCommand}) {
     initSavedServices();
@@ -26,6 +31,14 @@ class ServicesController extends ChangeNotifier {
     return _loading;
   }
 
+  SortOptions get selectedSortOption {
+    return _selectedSortOption;
+  }
+
+  bool get reverseOrder {
+    return _reverseOrder;
+  }
+
   Service get(String id) {
     return _services.firstWhere((element) => element.id == id);
   }
@@ -34,6 +47,7 @@ class ServicesController extends ChangeNotifier {
     _loading = true;
     _services.clear();
     _services = await Service.getList(hostId, runCommand);
+    _services.sort((a, b) => a.title.compareTo(b.title));
     _loading = false;
     notifyListeners();
   }
@@ -112,6 +126,33 @@ class ServicesController extends ChangeNotifier {
             element.isNotEmpty && !_services.any((e) => e.title == element))
         .toList();
     _loading = false;
+    notifyListeners();
+  }
+
+  void sortServices(SortOptions sorting) {
+    if (_selectedSortOption == sorting) {
+      _reverseOrder = !_reverseOrder;
+    } else {
+      _reverseOrder = false;
+    }
+    if (sorting == SortOptions.alphabetically) {
+      _services.sort((a, b) => a.title.compareTo(b.title));
+      if (_reverseOrder) {
+        _services = _services.reversed.toList();
+      }
+    } else if (sorting == SortOptions.status) {
+      services.sort((a, b) {
+        if (a.isActive == b.isActive) {
+          return a.title.compareTo(b.title);
+        }
+        if (_reverseOrder) {
+          return a.isActive ? 1 : -1;
+        } else {
+          return a.isActive ? -1 : 1;
+        }
+      });
+    }
+    _selectedSortOption = sorting;
     notifyListeners();
   }
 }

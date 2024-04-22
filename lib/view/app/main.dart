@@ -119,8 +119,62 @@ class _AppState extends State<App> {
       return null;
     }
 
+    Widget renderPopupMenuButton() {
+      if (_route == 'services') {
+        return PopupMenuButton<SortOptions>(
+          icon: const Icon(Icons.sort),
+          onSelected: (SortOptions result) {
+            servicesController.sortServices(result);
+          },
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<SortOptions>>[
+            const PopupMenuItem<SortOptions>(
+              enabled: false,
+              child: Text('Sort:'),
+            ),
+            PopupMenuItem<SortOptions>(
+              value: SortOptions.alphabetically,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Alphabetically'),
+                  servicesController.selectedSortOption ==
+                          SortOptions.alphabetically
+                      ? Icon(
+                          servicesController.reverseOrder
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward,
+                        )
+                      : const SizedBox(),
+                ],
+              ),
+            ),
+            PopupMenuItem<SortOptions>(
+              value: SortOptions.status,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('By Status'),
+                  servicesController.selectedSortOption == SortOptions.status
+                      ? Icon(
+                          servicesController.reverseOrder
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward,
+                        )
+                      : const SizedBox(),
+                ],
+              ),
+            ),
+          ],
+        );
+      }
+      return const SizedBox();
+    }
+
     return Scaffold(
-      appBar: AppBar(title: Text(_getTitle())),
+      appBar: AppBar(
+        title: Text(_getTitle()),
+        actions: <Widget>[renderPopupMenuButton()],
+      ),
       body: _renderApp(),
       drawer: SSHDrawer(showScreen: _showScreen, disconnect: widget.disconnect),
       floatingActionButton: renderFloatingButton(),

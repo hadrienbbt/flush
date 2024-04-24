@@ -47,12 +47,7 @@ class ServicesController extends ChangeNotifier {
     _loading = true;
     _services.clear();
     _services = await Service.getList(hostId, runCommand);
-    _services.sort((a, b) {
-      if (a.isActive == b.isActive) {
-        return a.title.compareTo(b.title);
-      }
-      return a.isActive ? -1 : 1;
-    });
+    sort();
     _loading = false;
     notifyListeners();
   }
@@ -61,6 +56,7 @@ class ServicesController extends ChangeNotifier {
     final service = await Service.create(name, runCommand);
     if (service != null) {
       _services.add(service);
+      sort();
       service.save(hostId);
       _servicesFound.remove(name);
       notifyListeners();
@@ -134,19 +130,14 @@ class ServicesController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void sortServices(SortOptions sorting) {
-    if (_selectedSortOption == sorting) {
-      _reverseOrder = !_reverseOrder;
-    } else {
-      _reverseOrder = false;
-    }
-    if (sorting == SortOptions.alphabetically) {
+  void sort() {
+    if (_selectedSortOption == SortOptions.alphabetically) {
       _services.sort((a, b) => a.title.compareTo(b.title));
       if (_reverseOrder) {
         _services = _services.reversed.toList();
       }
-    } else if (sorting == SortOptions.status) {
-      services.sort((a, b) {
+    } else if (_selectedSortOption == SortOptions.status) {
+      _services.sort((a, b) {
         if (a.isActive == b.isActive) {
           return a.title.compareTo(b.title);
         }
@@ -157,7 +148,16 @@ class ServicesController extends ChangeNotifier {
         }
       });
     }
+  }
+
+  void sortServices(SortOptions sorting) {
+    if (_selectedSortOption == sorting) {
+      _reverseOrder = !_reverseOrder;
+    } else {
+      _reverseOrder = false;
+    }
     _selectedSortOption = sorting;
+    sort();
     notifyListeners();
   }
 }
